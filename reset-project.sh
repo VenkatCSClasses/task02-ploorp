@@ -1,5 +1,3 @@
 #!/bin/bash
 
-rm -rf src
-rm -rf target
-rm -f pom.xml
+rm -rf src target pom.xml README.md
