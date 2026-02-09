@@ -1,0 +1,346 @@
+version: "0.1.0"
+
+# Converted from BankAccountTest.java
+# Floating point precision expected: 0.001
+
+bank_account_constructor:
+  - name: "valid constructor"
+    input: { email: "a@b.com", balance: 200 }
+    output: { email: "a@b.com", balance: 200 }
+
+  - name: "error - empty email"
+    input: { email: "", balance: 100 }
+    error: "IllegalArgumentException"
+
+  - name: "error - negative balance"
+    input: { email: "a@b.com", balance: -50 }
+    error: "IllegalArgumentException"
+
+
+bank_account_is_email_valid:
+  - name: "empty string"
+    input: ""
+    output: false
+
+  # Total length
+  - name: "too short (a@b.c)"
+    input: "a@b.c"
+    output: false
+
+  - name: "shortest possible valid (a@b.co)"
+    input: "a@b.co"
+    output: true
+
+  # Missing sections
+  - name: "missing local part (@bb.com)"
+    input: "@bb.com"
+    output: false
+
+  - name: "missing domain (aa@.com)"
+    input: "aa@.com"
+    output: false
+
+  - name: "missing tld (aa@bb)"
+    input: "aa@bb"
+    output: false
+
+  # Length of local part
+  - name: "local part 1 char"
+    input: "a@b.com"
+    output: true
+
+  - name: "local part 65 chars (too long)"
+    input: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@b.com"
+    output: false
+
+  - name: "local part 64 chars (max valid)"
+    input: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@b.com"
+    output: true
+
+  # Length of domain
+  - name: "domain 2 chars"
+    input: "aa@bb.com"
+    output: true
+
+  # Length of TLD
+  - name: "tld 1 char (invalid)"
+    input: "aa@b.c"
+    output: false
+
+  - name: "tld 13 chars (longest valid)"
+    input: "aa@bb.international"
+    output: true
+
+  - name: "tld 14 chars (too long)"
+    input: "aa@bb.internationala"
+    output: false
+
+  # Domain/TLD segments
+  - name: "2 part tld (.co.uk)"
+    input: "aa@bb.co.uk"
+    output: true
+
+  - name: "subdomains"
+    input: "aa@bb.bb.bb.bb.bb.com"
+    output: true
+
+  # Special characters - Local
+  - name: "invalid quotes/parens local"
+    input: "a\"()a@b.com"
+    output: false
+
+  - name: "invalid spaces local"
+    input: "a a@b.com"
+    output: false
+
+  - name: "valid special chars local"
+    input: "#+!%_&*@b.com"
+    output: true
+
+  # Special characters - Domain
+  - name: "invalid hash in domain"
+    input: "aa@b#b.com"
+    output: false
+
+  - name: "invalid hash in tld"
+    input: "aa@bb.#4"
+    output: false
+
+  - name: "valid hyphen in domain"
+    input: "aa@a-b.com"
+    output: true
+
+  # Numbers
+  - name: "numbers in local"
+    input: "4@bb.com"
+    output: true
+
+  - name: "numbers in domain"
+    input: "aa@4.com"
+    output: true
+
+  - name: "numbers in tld (invalid)"
+    input: "aa@bb.44"
+    output: false
+
+  # Hyphen position
+  - name: "local starts with hyphen"
+    input: "-aa@bb.com"
+    output: false
+
+  - name: "local middle hyphen"
+    input: "a-a@bb.com"
+    output: true
+
+  - name: "local ends with hyphen"
+    input: "aa-@bb.com"
+    output: false
+
+  - name: "domain starts with hyphen"
+    input: "aa@-bb.com"
+    output: false
+
+  - name: "domain middle hyphen"
+    input: "aa@b-b.com"
+    output: true
+
+  - name: "domain ends with hyphen"
+    input: "aa@bb-.com"
+    output: false
+
+  # Dot position
+  - name: "local starts with dot"
+    input: ".aa@bb.com"
+    output: false
+
+  - name: "domain starts with dot"
+    input: "aa@.bb.com"
+    output: false
+
+  - name: "local ends with dot"
+    input: "aa.@bb.com"
+    output: false
+
+  - name: "domain ends with dot"
+    input: "aa@bb.com."
+    output: false
+
+  - name: "dot in middle of local"
+    input: "a.a@bb.com"
+    output: true
+
+  # Double dots
+  - name: "double dot local"
+    input: "a..a@bb.com"
+    output: false
+
+  - name: "double dot domain"
+    input: "aa@bb..com"
+    output: false
+
+  # Formatting symbols
+  - name: "extra @ symbol"
+    input: "a@a@b.com"
+    output: false
+
+  - name: "missing @ symbol"
+    input: "aa.bb.com"
+    output: false
+
+  # Capitalization
+  - name: "caps local"
+    input: "Aa@bb.com"
+    output: true
+
+  - name: "caps domain"
+    input: "aa@Bb.com"
+    output: true
+
+  - name: "all caps"
+    input: "AA@BB.COM"
+    output: true
+
+
+bank_account_is_amount_valid:
+  - name: "valid zero"
+    input: 0
+    output: true
+
+  - name: "valid smallest positive (0.01)"
+    input: 0.01
+    output: true
+
+  - name: "valid normal (100)"
+    input: 100
+    output: true
+
+  - name: "valid large"
+    input: 99999999.99
+    output: true
+
+  - name: "invalid small negative"
+    input: -0.01
+    output: false
+
+  - name: "invalid normal negative"
+    input: -100
+    output: false
+
+  - name: "invalid too many decimals (0.001)"
+    input: 0.001
+    output: false
+
+  - name: "invalid too many decimals (100.999)"
+    input: 100.999
+    output: false
+
+
+bank_account_withdraw:
+  - name: "smallest possible withdraw (0.01)"
+    input: { balance: 200, withdraw: 0.01 }
+    output: 199.99
+
+  - name: "normal withdraw (100)"
+    input: { balance: 200, withdraw: 100 }
+    output: 100
+
+  - name: "withdraw leaving small amount"
+    input: { balance: 100, withdraw: 99.98 }
+    output: 0.02
+
+  - name: "withdraw zero"
+    input: { balance: 200, withdraw: 0 }
+    output: 200
+
+  - name: "withdraw exact balance (empty account)"
+    input: { balance: 0.01, withdraw: 0.01 }
+    output: 0
+
+  # Errors - Insufficient Funds
+  - name: "error - just over balance (0.02 from 0.01)"
+    input: { balance: 0.01, withdraw: 0.02 }
+    error: "InsufficientFundsException"
+
+  - name: "error - normal over withdraw"
+    input: { balance: 100, withdraw: 101 }
+    error: "InsufficientFundsException"
+
+  - name: "error - massive over withdraw"
+    input: { balance: 200, withdraw: 1000000.0 }
+    error: "InsufficientFundsException"
+
+  - name: "error - withdraw from empty account"
+    input: { balance: 0, withdraw: 0.01 }
+    error: "InsufficientFundsException"
+
+  # Errors - Invalid Arguments
+  - name: "error - negative withdraw"
+    input: { balance: 200, withdraw: -0.01 }
+    error: "IllegalArgumentException"
+
+  - name: "error - too many decimals (0.001)"
+    input: { balance: 200, withdraw: 0.001 }
+    error: "IllegalArgumentException"
+
+
+bank_account_deposit:
+  - name: "smallest possible deposit (0.01)"
+    input: { balance: 200, deposit: 0.01 }
+    output: 200.01
+
+  - name: "normal deposit (100)"
+    input: { balance: 200.01, deposit: 100 }
+    output: 300.01
+
+  - name: "second deposit (99.98)"
+    input: { balance: 300.01, deposit: 99.98 }
+    output: 399.99
+
+  - name: "deposit zero"
+    input: { balance: 399.99, deposit: 0 }
+    output: 399.99
+
+  # Errors
+  - name: "error - negative deposit"
+    input: { balance: 200, deposit: -0.01 }
+    error: "IllegalArgumentException"
+
+  - name: "error - too many decimals"
+    input: { balance: 200, deposit: 0.001 }
+    error: "IllegalArgumentException"
+
+
+bank_account_transfer:
+  - name: "smallest possible transfer (0.01)"
+    input: { source: 200, dest: 200, amount: 0.01 }
+    output: { source: 199.99, dest: 200.01 }
+
+  - name: "normal transfer (100)"
+    input: { source: 199.99, dest: 200.01, amount: 100 }
+    output: { source: 99.99, dest: 300.01 }
+
+  - name: "transfer leaving small amount (99.98)"
+    input: { source: 99.99, dest: 300.01, amount: 99.98 }
+    output: { source: 0.01, dest: 399.99 }
+
+  - name: "transfer zero"
+    input: { source: 0.01, dest: 399.99, amount: 0 }
+    output: { source: 0.01, dest: 399.99 }
+
+  # Errors - Insufficient Funds
+  - name: "error - transfer just over balance"
+    input: { source: 0.01, dest: 200, amount: 0.02 }
+    error: "InsufficientFundsException"
+
+  - name: "error - transfer way over balance"
+    input: { source: 100, dest: 200, amount: 1000 }
+    error: "InsufficientFundsException"
+
+  # Errors - Invalid Arguments
+  - name: "error - negative transfer"
+    input: { source: 200, dest: 200, amount: -0.01 }
+    error: "IllegalArgumentException"
+
+  - name: "error - too many decimals transfer"
+    input: { source: 200, dest: 200, amount: 0.001 }
+    error: "IllegalArgumentException"
