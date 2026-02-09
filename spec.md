@@ -9,7 +9,7 @@ there's no need for external libraries (other than JUnit)
 
 the bank account class has 2 fields: email and balance, balance is a double
 
-there are exactly 7 methods
+there are exactly 7 methods (don't add more)
 
 first a simple getBalance and getEmail
 we also need deposit and withdraw and transfer (not static)
@@ -30,4 +30,6 @@ add a standard docstring for each function
 there should only be 4 files generated, the main class, the test class, the error class, and the pom.xml file
 do not modify anything else or generate anything extra
 
-please make sure the package is declared properly so an ide could correctly process the file
+it is imperative that the package is declared properly in all java files so an ide can correctly process the file
+
+finally, generate a README.md file for this project
