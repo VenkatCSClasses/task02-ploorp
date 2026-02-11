@@ -1,3 +1,7 @@
+## Java BankAccount Specification
+
+please read the full spec before generating any code!
+
 generate a BankAccount class file based on this spec and to pass the tests in tests.yaml, then in a test directory make a JUnit BankAccountTest class based on tests.yaml
 
 feel free to use whatever solutions you think are best, as long as the tests pass and it fits the specification
