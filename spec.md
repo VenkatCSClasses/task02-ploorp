@@ -23,7 +23,7 @@ there are exactly 7 methods (don't add more)
 - first a simple getBalance and getEmail
 - we also need deposit and withdraw and transfer (not static)
 - then make 2 static functions: isEmailValid and isAmountValid (they should be called in other methods  as needed and in the contructor)
-- make isEmailValid based on the tests, it doesn't have to work with the offical email specification
+- make isEmailValid based on the tests, it doesn't have to work with the official email specification
 - isAmountValid should verify that a given amount is non-negative, and fewer than 2 significant decimal places
 
 there is also a custom error: InsufficientFundsException
